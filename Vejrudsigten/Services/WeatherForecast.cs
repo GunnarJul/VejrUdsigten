@@ -7,14 +7,15 @@ namespace Vejrudsigten.Services
 {
     public static class WeatherForecast
     {
-        public static async Task<string> GetForecastAsync(string key)
+        public static async Task<string[]> GetForecastAsync(string key)
         {
             WeatherService service = new WeatherService();
             var todayInfo = await service.GetTodaysWeather(key, "Kolding");
             var yesterdayInfo = await service.GetYesterdaysWeather(key, "Kolding");
-
-            String result = "Vejret i Kolding er {0} og der er {1} grader. I går var det {2} og {3} grader";
-            return String.Format(result, todayInfo.Conditions, todayInfo.Temperature, yesterdayInfo.Conditions, yesterdayInfo.Temperature);
+            string headLine = todayInfo.DescribeTemperatureChange(yesterdayInfo);
+            var description = $"Vejret i Kolding er {todayInfo.Conditions} og der er {todayInfo.Temperature} grader. I går var det {yesterdayInfo.Conditions} og {yesterdayInfo.Temperature} grader";
+            return  new string[2]{ headLine, description} ;
         }
+      
     }
 }
